@@ -272,7 +272,7 @@ __pycache__/
 # tools/
 
 ### VisualStudioCode ###
-.vscode/*
+.vscode/
 !.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json
@@ -291,3 +291,8 @@ __pycache__/
 .ionide
 
 # End of https://www.toptal.com/developers/gitignore/api/aspnetcore,visualstudiocode
+
+# logs files
+log/
+main.log
+*.log
