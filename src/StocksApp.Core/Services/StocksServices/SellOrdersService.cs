@@ -54,6 +54,17 @@ namespace StocksApp.Core.Services.StocksServices
             _diagnosticContext.Set("Sell orders", sellOrders);
 
             return sellOrders.Select(temp => temp.ToSellOrderResponse()).ToList();
-        } 
-    }
+        }
+
+        public async Task<List<SellOrderResponse>> GetUserSellOrders(Guid userID)
+        {
+            _logger.LogInformation($"{nameof(GetUserSellOrders)} method of {nameof(SellOrdersService)}");
+
+            List<SellOrder> userSellOrders = await _stocksRepository.GetUserSellOrders(userID);
+
+            _diagnosticContext.Set("User sell orders", userSellOrders);
+
+            return userSellOrders.Select(temp => temp.ToSellOrderResponse()).ToList();
+        }
+  }
 }

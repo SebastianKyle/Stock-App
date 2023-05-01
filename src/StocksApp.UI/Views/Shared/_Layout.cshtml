@@ -35,7 +35,15 @@
             <input type="search" class="search-text" placeholder="Search Stocks" name="SearchText">
             <i class="fa-solid fa-gear"></i>
 
-            <button class="button button-blue-back ml login-button">Login</button>
+            <div class="navbar account-links">
+              <ul>
+                <li>
+                  @* <button class="button button-blue-back ml login-button">Login</button> *@
+                  <a asp-controller="Account" asp-action="Register" >Register</a>
+                  <a asp-controller="Account" asp-action="Login" >Login</a>
+                </li>
+              </ul>
+            </div>
 
           </div>
 

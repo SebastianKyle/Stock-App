@@ -14,6 +14,11 @@ namespace StocksApp.Core.DTO
     public class BuyOrderRequest : IOrderRequest
     {
         /// <summary>
+        /// The unique ID of the user that placed the order
+        /// </summary>
+        public Guid UserID { get; set; }
+
+        /// <summary>
         /// The unique symbol of stock
         /// </summary>
         [Required(ErrorMessage = "Stock symbol can not be null or empty")]
@@ -57,6 +62,7 @@ namespace StocksApp.Core.DTO
         public static BuyOrder ToBuyOrder(this BuyOrderRequest buyOrderRequest)
         {
             BuyOrder buyOrder = new BuyOrder() {
+                UserID = buyOrderRequest.UserID,
                 StockSymbol = buyOrderRequest.StockSymbol,
                 StockName = buyOrderRequest.StockName,
                 DateAndTimeOfOrder = buyOrderRequest.DateAndTimeOfOrder,

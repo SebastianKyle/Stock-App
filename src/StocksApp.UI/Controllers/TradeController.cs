@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -77,6 +78,9 @@ namespace StocksApp.UI.Controllers
         {
             _logger.LogInformation($"{nameof(BuyOrder)} IAction method of {nameof(TradeController)} controller");
 
+            Guid userID = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            orderRequest.UserID = userID;
+
             // invoke service method
             BuyOrderResponse buyOrderResponse = await _buyOrdersService.CreateBuyOrder(orderRequest);
 
@@ -91,6 +95,9 @@ namespace StocksApp.UI.Controllers
         {
             _logger.LogInformation($"{nameof(SellOrder)} IAction method of {nameof(TradeController)} controller");
 
+            Guid userID = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            orderRequest.UserID = userID;
+
             // Invoke service method
             SellOrderResponse sellOrderResponse = await _sellOrdersService.CreateSellOrder(orderRequest);
 
@@ -102,12 +109,17 @@ namespace StocksApp.UI.Controllers
         {
             _logger.LogInformation($"{nameof(Orders)} IAction method of {nameof(TradeController)} controller");
 
-            List<BuyOrderResponse> buyOrders = await _buyOrdersService.GetBuyOrders();
-            List<SellOrderResponse> sellOrders = await _sellOrdersService.GetSellOrders();
+            // List<BuyOrderResponse> buyOrders = await _buyOrdersService.GetBuyOrders();
+            // List<SellOrderResponse> sellOrders = await _sellOrdersService.GetSellOrders();
+
+            Guid userID = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+            List<BuyOrderResponse> userBuyOrders = await _buyOrdersService.GetUserBuyOrders(userID);
+            List<SellOrderResponse> userSellOrders = await _sellOrdersService.GetUserSellOrders(userID);
 
             Orders orders = new Orders() {
-                BuyOrders = buyOrders,
-                SellOrders = sellOrders
+                BuyOrders = userBuyOrders,
+                SellOrders = userSellOrders
             };
 
             ViewBag.TradingOptions = _tradingOptions;
@@ -118,9 +130,16 @@ namespace StocksApp.UI.Controllers
         [Route("[action]")]
         public async Task<IActionResult> OrdersPDF()
         {
+            // List<IOrderResponse> orders = new List<IOrderResponse>();
+            // orders.AddRange(await _buyOrdersService.GetBuyOrders());
+            // orders.AddRange(await _sellOrdersService.GetSellOrders());
+            // orders.OrderByDescending(temp => temp.DateAndTimeOfOrder).ToList();
+
+            Guid userID = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+
             List<IOrderResponse> orders = new List<IOrderResponse>();
-            orders.AddRange(await _buyOrdersService.GetBuyOrders());
-            orders.AddRange(await _sellOrdersService.GetSellOrders());
+            orders.AddRange(await _buyOrdersService.GetUserBuyOrders(userID));
+            orders.AddRange(await _sellOrdersService.GetUserSellOrders(userID));
             orders.OrderByDescending(temp => temp.DateAndTimeOfOrder).ToList();
 
             ViewBag.TradingOptions = _tradingOptions;

@@ -13,6 +13,11 @@ namespace StocksApp.Core.DTO
     /// </summary>
     public class SellOrderRequest : IOrderRequest
     {
+		/// <summary>
+		/// The unique ID of the user that placed the order
+		/// </summary>
+		public Guid UserID { get; set; }
+
         /// <summary>
         /// The unique symbol of stock
         /// </summary>
@@ -57,6 +62,7 @@ namespace StocksApp.Core.DTO
         public static SellOrder ToSellOrder(this SellOrderRequest sellOrderRequest)
         {
             SellOrder sellOrder = new SellOrder() {
+                UserID = sellOrderRequest.UserID,
                 StockSymbol = sellOrderRequest.StockSymbol,
                 StockName = sellOrderRequest.StockName,
                 DateAndTimeOfOrder = sellOrderRequest.DateAndTimeOfOrder,

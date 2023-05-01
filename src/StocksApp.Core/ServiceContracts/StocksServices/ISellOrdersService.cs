@@ -22,5 +22,11 @@ namespace StocksApp.Core.ServiceContracts.StocksServices
         /// </summary>
         /// <returns>List of SellOrderResponse object</returns>
         Task<List<SellOrderResponse>> GetSellOrders(); 
+
+        /// <summary>
+        /// Returns all sell orders of current user
+        /// </summary>
+        /// <returns>List of SellOrderResponse of current user</returns>
+        Task<List<SellOrderResponse>> GetUserSellOrders(Guid userID);
     }
 }

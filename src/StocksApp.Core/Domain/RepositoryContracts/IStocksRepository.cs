@@ -34,5 +34,17 @@ namespace StocksApp.Core.Domain.RepositoryContracts
         /// </summary>
         /// <returns>List of SellOrder objects</returns>
         Task<List<SellOrder>> GetSellOrder(); 
+
+        /// <summary>
+        /// Get all buy orders of current user
+        /// </summary>
+        /// <returns>List of BuyOrders of current user</returns>
+        Task<List<BuyOrder>> GetUserBuyOrders(Guid userID);
+
+        /// <summary>
+        /// Get all sell orders of current user
+        /// </summary>
+        /// <returns>List of SellOrder od current user</returns>
+        Task<List<SellOrder>> GetUserSellOrders(Guid userID);
     }
 }

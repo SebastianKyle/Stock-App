@@ -417,6 +417,10 @@ a.button-link:visited {
   margin-top: 20px;
 }
 
+.account-links {
+  display: block;
+}
+
 .pill {
   background-color: #9e9e9eff;
   color: #ffffff;
@@ -444,7 +448,7 @@ a.button-link:visited {
   transition: box-shadow 0.2s;
 }
 
-.form-input:focus {
+.mmmmmmmmmmmmmcus {
   outline: none;
   border: 1px solid #245eb0;
   box-shadow: 0px 0px 4px 0px #1383a4;
@@ -551,6 +555,14 @@ a.button-link:visited {
   max-width: 700px;
 }
 
+.form-container {
+  background-color: #ffffff;
+  border-radius: 15px;
+  margin: auto;
+  width: 50%;
+  padding: 20px;
+}
+
 @media screen and (min-width: 1000px) {
   #top-bar-div {
     flex-direction: row;
@@ -613,5 +625,9 @@ a.button-link:visited {
 
   .stocks-list {
     flex-direction: row;
+  }
+
+  .account-links {
+    display: inline-block;
   }
 }

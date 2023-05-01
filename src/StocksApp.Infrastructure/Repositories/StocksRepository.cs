@@ -46,6 +46,20 @@ namespace StocksApp.Infrastructure.Repositories
             List<SellOrder> sellOrders = await _dbContext.SellOrders.OrderByDescending(temp => temp.DateAndTimeOfOrder).ToListAsync();
             
             return sellOrders;
-        }  
-    }
+        }
+
+        public async Task<List<BuyOrder>> GetUserBuyOrders(Guid userID)
+        {
+            List<BuyOrder> userBuyOrders = await _dbContext.BuyOrders.Where(temp => temp.UserID == userID).ToListAsync();
+
+            return userBuyOrders;
+        }
+
+        public async Task<List<SellOrder>> GetUserSellOrders(Guid userID)
+        {
+            List<SellOrder> userSellOrder = await _dbContext.SellOrders.Where(temp => temp.UserID == userID).ToListAsync();
+            
+            return userSellOrder;
+        }
+  }
 }

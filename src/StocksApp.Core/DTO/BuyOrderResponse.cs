@@ -9,6 +9,11 @@ namespace StocksApp.Core.DTO
     public class BuyOrderResponse : IOrderResponse
     {
         /// <summary>
+        /// The unique ID of the user that placed the order
+        /// </summary>
+        public Guid UserID { get; set; }
+
+        /// <summary>
         /// The unique ID of buy order
         /// </summary>
         public Guid BuyOrderID { get; set; }                
@@ -95,6 +100,7 @@ namespace StocksApp.Core.DTO
         public static BuyOrderResponse ToBuyOrderResponse(this BuyOrder buyOrder)
         {
             BuyOrderResponse buyOrderResponse = new BuyOrderResponse() {
+                UserID = buyOrder.UserID,
                 BuyOrderID = buyOrder.BuyOrderID,
                 StockSymbol = buyOrder.StockSymbol,
                 StockName = buyOrder.StockName,

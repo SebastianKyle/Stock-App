@@ -58,5 +58,16 @@ namespace StocksApp.Core.Services.StocksServices
 
       return buyOrders.Select(temp => temp.ToBuyOrderResponse()).ToList();
     }
+
+    public async Task<List<BuyOrderResponse>> GetUserBuyOrders(Guid userID)
+    {
+      _logger.LogInformation($"{nameof(GetUserBuyOrders)} method of {nameof(BuyOrdersService)}");
+
+      List<BuyOrder> userBuyOrders = await _stocksRepository.GetUserBuyOrders(userID);
+
+      _diagnosticContext.Set("User buy orders", userBuyOrders);
+
+      return userBuyOrders.Select(temp => temp.ToBuyOrderResponse()).ToList();
+    }
   }
 }

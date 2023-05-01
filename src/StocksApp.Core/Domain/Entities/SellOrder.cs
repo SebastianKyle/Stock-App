@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 using StocksApp.Core.Domain.Entities.CustomValidators;
+using StocksApp.Core.Domain.IdentityEntities;
 
 namespace StocksApp.Core.Domain.Entities
 {
@@ -12,6 +14,12 @@ namespace StocksApp.Core.Domain.Entities
 	/// </summary>
 	public class SellOrder
 	{
+		/// <summary>
+		/// The unique ID of the user that placed the order
+		/// </summary>
+		[ForeignKey(nameof(ApplicationUser.Id))]
+		public Guid UserID { get; set; }
+
 		/// <summary>
 		/// The unique ID of the sell order
 		/// </summary>
