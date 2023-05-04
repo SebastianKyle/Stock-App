@@ -1,0 +1,77 @@
+@model BalanceDepositDTO
+
+@{
+  ViewBag.Title = "Deposit";
+  ViewBag.CurrentUrl = "~/AccountBalance/Deposit";
+}
+
+<div class="text-grey ml">
+  <span>Account Balance</span>
+  <i class="fa-solid fa-caret-right"></i>
+  <span>Deposit</span>
+</div>
+
+<div class="form-container">
+  <h2 class="text-large">Deposit</h2>
+
+  <form asp-action="Deposit" asp-controller="AccountBalance" method="post">
+
+    @* Current account balance *@
+    <div class="form-field flex">
+      <h4>Current account balance: @ViewBag.AccountBalance <small class="text-grey"> $</small></h4>
+    </div>
+
+    @* Deposit amount *@
+    <div class="form-field flex">
+      <div class="w-25">
+        <label asp-for="DepositAmount" class="form-label pt">Deposit amount</label>
+      </div>
+
+      <div class="flex-1">
+        <input asp-for="DepositAmount" class="form-input">
+        <span asp-validation-for="DepositAmount" class="text-red"></span>
+      </div>
+    </div>
+
+    @* Deposit button *@
+    <div class="form-field flex">
+      <div class="w-25"></div>
+      <div class="flex-1">
+        <button class="button button-green-back" type="submit">Deposit</button>
+      </div>
+    </div>
+
+  </form>
+
+</div>
+
+@section Scripts {
+  <script type="text/javascript">
+
+    function openSuccessModal(msg) {
+      var myDiv = document.getElementById("successTransactionModalBody");
+      myDiv.innerHTML = msg;
+      $('#successTransactionModal').modal('show');
+    }
+
+    function openFailedModal(msg) {
+      var myDiv = document.getElementById("failedTransactionModalBody");
+      myDiv.innerHTML = msg;
+      $('#failedTransactionModal').modal('show');
+    }
+
+    $(document).ready(function() {
+      var transactionState = @TempData["Succeeded"];
+      var message = "";
+
+      if (transactionState == 1) {
+        message = "Deposit sucessfully";
+        openSuccessModal(message);
+      } else {
+        message = "Deposit failed";
+        openFailedModal(message);
+      } 
+    });
+
+  </script>
+}

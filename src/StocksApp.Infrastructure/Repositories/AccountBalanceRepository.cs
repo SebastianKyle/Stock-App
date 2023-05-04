@@ -26,7 +26,17 @@ namespace StocksApp.Infrastructure.Repositories
         return userAccountBalance;
     }
 
-    public async Task<UserAccountBalance?> GetAccountBalance(Guid? userID)
+    public async Task<UserAccountBalance> UpdateAccountBalance(UserAccountBalance user)
+    {
+      UserAccountBalance? matchingUser = await _db.UserAccountBalances.FirstOrDefaultAsync(temp => temp.UserID == user.UserID);
+
+      matchingUser.AccountBalance = user.AccountBalance; 
+      int rowsUpdated = await _db.SaveChangesAsync();
+
+      return matchingUser;
+    }
+
+    public async Task<UserAccountBalance> GetAccountBalance(Guid? userID)
     {
       UserAccountBalance? accountBalance = await _db.UserAccountBalances.FirstOrDefaultAsync(temp => temp.UserID == userID);
       await _db.SaveChangesAsync();

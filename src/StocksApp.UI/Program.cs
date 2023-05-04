@@ -41,6 +41,10 @@ if (builder.Environment.IsEnvironment("Test") == false)
 
 app.UseStaticFiles();
 app.UseRouting();
+
+app.UseAuthentication(); // Read the identity cookie
+app.UseAuthorization(); // Validate access permission of user
+
 app.MapControllers();
 
 app.Run();

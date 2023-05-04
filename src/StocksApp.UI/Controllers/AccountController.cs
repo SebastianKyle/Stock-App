@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -13,6 +14,7 @@ using StocksApp.Core.ServiceContracts.AccountBalanceServices;
 namespace StocksApp.UI.Controllers
 {
     [Route("[controller]/[action]")]
+    [AllowAnonymous]
     public class AccountController : Controller
     {
         private readonly ILogger<AccountController> _logger;
@@ -50,7 +52,7 @@ namespace StocksApp.UI.Controllers
                 PersonName = registerDTO.UserName
             };
 
-            IdentityResult identityResult = await _userManager.CreateAsync(user);
+            IdentityResult identityResult = await _userManager.CreateAsync(user, registerDTO.Password);
             if (identityResult.Succeeded)
             {
                 // Sign in
@@ -63,7 +65,7 @@ namespace StocksApp.UI.Controllers
 
                 await _accountBalanceCreateService.CreateAccountBalance(userAccountBalanceRequest);
 
-                return RedirectToAction(nameof(StocksController.Explore), "Explore");
+                return RedirectToAction(nameof(StocksController.Explore), "Stocks");
             }
             else
             {
@@ -78,9 +80,39 @@ namespace StocksApp.UI.Controllers
 
         }
 
+        [HttpGet]
         public IActionResult Login()
         {
             return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> LoginAsync(LoginDTO loginDTO)
+        {
+            if (!ModelState.IsValid)
+            {
+                ViewBag.Errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
+
+                return View(loginDTO);
+            }
+
+            var result = await _signInManager.PasswordSignInAsync(loginDTO.Email, loginDTO.Password, isPersistent: false, lockoutOnFailure: false);
+
+            if (result.Succeeded)
+            {
+                return RedirectToAction(nameof(StocksController.Explore), "Stocks");
+            }
+
+            ModelState.AddModelError("Login", "Invalid email or password");
+
+            return View(loginDTO);
+        }
+
+        public async Task<IActionResult> Logout()
+        {
+            await _signInManager.SignOutAsync();
+
+            return RedirectToAction(nameof(StocksController.Explore), "Stocks");
         }
     }
 }

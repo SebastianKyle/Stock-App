@@ -1,0 +1,77 @@
+@model BalanceWithdrawDTO
+
+@{
+  ViewBag.Title = "Withdraw";
+  ViewBag.CurrentUrl = "~/AccountBalance/Withdraw";
+}
+
+<div class="text-grey ml">
+  <span>Account Balance</span>
+  <i class="fa-solid fa-caret-right"></i>
+  <span>Withdraw</span>
+</div>
+
+<div class="form-container">
+  <h2 class="text-large">Withdraw</h2>
+
+  <form asp-action="Withdraw" asp-controller="AccountBalance" method="post">
+
+    @* Current account balance *@
+    <div class="form-field flex">
+      <h4>Current account balance: @ViewBag.AccountBalance <small class="text-grey"> $</small></h4>
+    </div>
+
+    @* Withdraw amount *@
+    <div class="form-field flex">
+      <div class="w-25">
+        <label asp-for="WithdrawAmount" class="form-label pt ml">Withdraw amount</label>
+      </div>
+
+      <div class="flex-1">
+        <input asp-for="WithdrawAmount" class="form-input">
+        <span asp-validation-for="WithdrawAmount" class="text-red"></span>
+      </div>
+    </div>
+
+    @* Withdraw button *@
+    <div class="form-field flex">
+      <div class="w-25"></div>
+      <div class="flex-1">
+        <button class="button button-green-back" type="submit">Withdraw</button>
+      </div>
+    </div>
+
+</form>
+
+</div>
+
+@section Scripts {
+  <script type="text/javascript">
+
+    function openSuccessModal(msg) {
+      var myDiv = document.getElementById("successTransactionModalBody");
+      myDiv.innerHTML = msg;
+      $('#successTransactionModal').modal('show');
+    }
+
+    function openFailedModal(msg) {
+      var myDiv = document.getElementById("failedTransactionModalBody");
+      myDiv.innerHTML = msg;
+      $('#failedTransactionModal').modal('show');
+    }
+
+    $(document).ready(function() {
+      var transactionState = @TempData["Succeeded"];
+      var message = "";
+
+      if (transactionState == 1) {
+        message = "Withdraw sucessfully.";
+        openSuccessModal(message);
+      } else {
+        message = "Withdraw failed. " + "@TempData["Errors"]";
+        openFailedModal(message);
+      } 
+    });
+
+  </script>
+}

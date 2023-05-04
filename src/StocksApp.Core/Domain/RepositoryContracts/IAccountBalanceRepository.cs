@@ -21,6 +21,13 @@ namespace StocksApp.Core.Domain.RepositoryContracts
         /// Get the account balance of the matching user with the given user ID
         /// </summary>
         /// <param name="userID">ID of the user to search</param>
-        Task<UserAccountBalance?> GetAccountBalance(Guid? userID);
+        Task<UserAccountBalance> GetAccountBalance(Guid? userID);
+
+        /// <summary>
+        /// Update account balance after depositing / withdrawing
+        /// </summary>
+        /// <param name="userID">User ID to find</param>
+        /// <returns>UserAccountBalance after depositing / withdrawing</returns>
+        Task<UserAccountBalance> UpdateAccountBalance(UserAccountBalance user);
     }
 }

@@ -26,6 +26,7 @@ namespace StocksApp.Core.DTO
 
         [Required(ErrorMessage = "Confirm password can not be blank!")]
         [DataType(DataType.Password)]
+        [Compare("Password", ErrorMessage = "Password and confirm password do not match")]
         public string ConfirmPassword { get; set; }
     }
 }
