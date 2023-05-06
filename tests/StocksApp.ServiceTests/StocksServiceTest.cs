@@ -11,7 +11,9 @@ using StocksApp.Core.Domain.Entities;
 using StocksApp.Core.Domain.RepositoryContracts;
 using StocksApp.Core.DTO;
 using StocksApp.Core.ServiceContracts.StocksServices;
+using StocksApp.Core.ServiceContracts.UserStockServices;
 using StocksApp.Core.Services.StocksServices;
+using StocksApp.Core.Services.UserStockServices;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -21,10 +23,13 @@ namespace StocksApp.ServiceTests
     {
         private readonly IBuyOrdersService _buyOrdersService;
         private readonly ISellOrdersService _sellOrdersService;
+        private readonly IUserStockGetService _userStockGetService;
         private readonly IStocksRepository _stocksRepository;
+        private readonly IUserStockRepository _userStockRepository;
         private readonly IAccountBalanceRepository _accountBalanceRepository;
         private readonly ITestOutputHelper _testOutputHelper;
         private readonly Mock<IStocksRepository> _stocksRepositoryMock;
+        private readonly Mock<IUserStockRepository> _userStockRepositoryMock;
         private readonly Mock<IAccountBalanceRepository> _accountBalanceRepositoryMock;
         private readonly ILogger<BuyOrdersService> _buyOrdersServiceLogger;
         private readonly Mock<ILogger<BuyOrdersService>> _buyOrdersServiceLoggerMock;
@@ -53,8 +58,14 @@ namespace StocksApp.ServiceTests
 
             _testOutputHelper = testOutputHelper;
 
+            var userStockGetServiceLoggerMock = new Mock<ILogger<UserStockGetService>>();
+            ILogger<UserStockGetService> userStockGetSeviceLogger = userStockGetServiceLoggerMock.Object;
+            _userStockRepositoryMock = new Mock<IUserStockRepository>();
+            _userStockRepository = _userStockRepositoryMock.Object;
+            _userStockGetService = new UserStockGetService(_userStockRepository, userStockGetSeviceLogger, diagnosticContext);
+
             _buyOrdersService = new BuyOrdersService(_stocksRepository, _accountBalanceRepository, _buyOrdersServiceLogger, diagnosticContext);
-            _sellOrdersService = new SellOrdersService(_stocksRepository, _accountBalanceRepository, _sellOrdersServiceLogger, diagnosticContext);
+            _sellOrdersService = new SellOrdersService(_stocksRepository, _userStockGetService, _accountBalanceRepository, _sellOrdersServiceLogger, diagnosticContext);
         }
 
         #region CreateBuyOrder
