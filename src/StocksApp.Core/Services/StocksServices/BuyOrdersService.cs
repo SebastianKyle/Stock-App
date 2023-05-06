@@ -15,12 +15,14 @@ namespace StocksApp.Core.Services.StocksServices
   public class BuyOrdersService : IBuyOrdersService
   {
     private readonly IStocksRepository _stocksRepository;
+    private readonly IAccountBalanceRepository _accountBalanceRepository;
     private readonly ILogger<BuyOrdersService> _logger;
     private readonly IDiagnosticContext _diagnosticContext;
 
-    public BuyOrdersService(IStocksRepository stocksRepository, ILogger<BuyOrdersService> logger, IDiagnosticContext diagnosticContext)
+    public BuyOrdersService(IStocksRepository stocksRepository, IAccountBalanceRepository accountBalanceRepository, ILogger<BuyOrdersService> logger, IDiagnosticContext diagnosticContext)
     {
       _stocksRepository = stocksRepository;
+      _accountBalanceRepository = accountBalanceRepository;
       _logger = logger;
       _diagnosticContext = diagnosticContext;
     }
@@ -42,6 +44,16 @@ namespace StocksApp.Core.Services.StocksServices
       buyOrder.BuyOrderID = Guid.NewGuid();
 
       BuyOrder buyOrderFromRepo = await _stocksRepository.CreateBuyOrder(buyOrder);
+
+      // Decrease account balance 
+      UserAccountBalance matchingUser = await _accountBalanceRepository.GetAccountBalance(buyOrderRequest.UserID);
+      double tradeAmount = buyOrderRequest.Price * buyOrderRequest.Quantity;
+      if (matchingUser.AccountBalance < tradeAmount)
+      {
+        throw new ArgumentException("Trade amount is greater than account balance. Transaction failed.");
+      }
+      matchingUser.AccountBalance -= tradeAmount; 
+      UserAccountBalance updatedAccountBalance = await _accountBalanceRepository.UpdateAccountBalance(matchingUser);
 
       BuyOrderResponse buyOrderResponse = buyOrder.ToBuyOrderResponse();
 

@@ -22,8 +22,10 @@ namespace StocksApp.ServiceTests
         private readonly IBuyOrdersService _buyOrdersService;
         private readonly ISellOrdersService _sellOrdersService;
         private readonly IStocksRepository _stocksRepository;
+        private readonly IAccountBalanceRepository _accountBalanceRepository;
         private readonly ITestOutputHelper _testOutputHelper;
         private readonly Mock<IStocksRepository> _stocksRepositoryMock;
+        private readonly Mock<IAccountBalanceRepository> _accountBalanceRepositoryMock;
         private readonly ILogger<BuyOrdersService> _buyOrdersServiceLogger;
         private readonly Mock<ILogger<BuyOrdersService>> _buyOrdersServiceLoggerMock;
         private readonly ILogger<SellOrdersService> _sellOrdersServiceLogger;
@@ -35,6 +37,8 @@ namespace StocksApp.ServiceTests
             _fixture = new Fixture();
             _stocksRepositoryMock = new Mock<IStocksRepository>();
             _stocksRepository = _stocksRepositoryMock.Object; // create mock repository object
+            _accountBalanceRepositoryMock = new Mock<IAccountBalanceRepository>();
+            _accountBalanceRepository = _accountBalanceRepositoryMock.Object;
 
             // Mock logger
             _buyOrdersServiceLoggerMock = new Mock<ILogger<BuyOrdersService>>();
@@ -49,8 +53,8 @@ namespace StocksApp.ServiceTests
 
             _testOutputHelper = testOutputHelper;
 
-            _buyOrdersService = new BuyOrdersService(_stocksRepository, _buyOrdersServiceLogger, diagnosticContext);
-            _sellOrdersService = new SellOrdersService(_stocksRepository, _sellOrdersServiceLogger, diagnosticContext);
+            _buyOrdersService = new BuyOrdersService(_stocksRepository, _accountBalanceRepository, _buyOrdersServiceLogger, diagnosticContext);
+            _sellOrdersService = new SellOrdersService(_stocksRepository, _accountBalanceRepository, _sellOrdersServiceLogger, diagnosticContext);
         }
 
         #region CreateBuyOrder

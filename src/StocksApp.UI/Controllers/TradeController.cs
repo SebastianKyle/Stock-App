@@ -11,6 +11,7 @@ using Rotativa.AspNetCore;
 using StocksApp.Core.DTO;
 using StocksApp.Core.ServiceContracts.FinnhubServices;
 using StocksApp.Core.ServiceContracts.StocksServices;
+using StocksApp.Core.ServiceContracts.UserStockServices;
 using StocksApp.UI.Filters.ActionFilters;
 using StocksApp.UI.Models;
 
@@ -25,6 +26,7 @@ namespace StocksApp.UI.Controllers
         private readonly IConfiguration _configuration;
         private readonly IBuyOrdersService _buyOrdersService;
         private readonly ISellOrdersService _sellOrdersService;
+        private readonly IUserStockAddService _userStockAddService;
         private readonly ILogger<TradeController> _logger;
 
         /// <summary>
@@ -35,7 +37,7 @@ namespace StocksApp.UI.Controllers
         /// <param name="configuration">Inject IConfiguration</param>
         /// <param name="stocksService">Inject StocksService</param>
         /// <param name="logger">Inject ILogger object for logging</param>
-        public TradeController(IFinnhubCompanyProfileService finnhubCompanyProfileService, IFinnhubStockPriceQuoteService finnhubStockPriceQuoteService, IOptions<TradingOptions> tradingOptions, IConfiguration configuration, IBuyOrdersService buyOrdersService, ISellOrdersService sellOrdersService, ILogger<TradeController> logger) 
+        public TradeController(IFinnhubCompanyProfileService finnhubCompanyProfileService, IFinnhubStockPriceQuoteService finnhubStockPriceQuoteService, IOptions<TradingOptions> tradingOptions, IConfiguration configuration, IBuyOrdersService buyOrdersService, ISellOrdersService sellOrdersService, IUserStockAddService userStockAddService, ILogger<TradeController> logger) 
         {
             _finnhubCompanyProfileService = finnhubCompanyProfileService;
             _finnhubStocksPriceQuoteService = finnhubStockPriceQuoteService;
@@ -43,12 +45,13 @@ namespace StocksApp.UI.Controllers
             _configuration = configuration;
             _buyOrdersService = buyOrdersService;
             _sellOrdersService = sellOrdersService;
+            _userStockAddService = userStockAddService;
             _logger = logger;
         }
 
         [Route("[action]/{stockSymbol}")]
         [Route("~/[controller]/{stockSymbol}")]
-        public async Task<IActionResult> Index(string stockSymbol)
+        public async Task<IActionResult> Index(string stockSymbol, bool succeeded = true)
         {
             _logger.LogInformation($"{nameof(Index)} IAction method of {nameof(TradeController)} controller");
 
@@ -66,6 +69,15 @@ namespace StocksApp.UI.Controllers
                 Price = Convert.ToDouble(stockPrice["c"].ToString())
             };
             ViewBag.FinnhubToken = _configuration["FinnhubToken"];
+            if (succeeded == false)
+            {
+                TempData["Succeeded"] = 0;
+                ViewBag.ErrorMessage = TempData["Errors"];
+            }
+            else
+            {
+                TempData["Succeeded"] = 1;
+            }
 
             return View(stock);
         }
@@ -82,7 +94,26 @@ namespace StocksApp.UI.Controllers
             orderRequest.UserID = userID;
 
             // invoke service method
-            BuyOrderResponse buyOrderResponse = await _buyOrdersService.CreateBuyOrder(orderRequest);
+            BuyOrderResponse buyOrderResponse = new BuyOrderResponse();
+            try
+            {
+                buyOrderResponse = await _buyOrdersService.CreateBuyOrder(orderRequest);
+            }
+            catch (ArgumentException ex)
+            {
+                TempData["Errors"] = ex.Message;
+                return RedirectToAction(nameof(Index), new { stockSymbol = orderRequest.StockSymbol, succeeded = false });
+            }
+
+            UserStockRequest userStockRequest = new UserStockRequest() {
+                UserID = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)),
+                StockSymbol = orderRequest.StockSymbol,
+                StockName = orderRequest.StockName,
+                Quantity = orderRequest.Quantity
+            };
+            await _userStockAddService.AddUserStock(userStockRequest);
+
+            TempData["Succeeded"] = 1;
 
             return RedirectToAction(nameof(Orders));
         }
@@ -99,7 +130,17 @@ namespace StocksApp.UI.Controllers
             orderRequest.UserID = userID;
 
             // Invoke service method
-            SellOrderResponse sellOrderResponse = await _sellOrdersService.CreateSellOrder(orderRequest);
+            SellOrderResponse sellOrderResponse = new SellOrderResponse();
+            try
+            {
+                sellOrderResponse = await _sellOrdersService.CreateSellOrder(orderRequest);
+            }
+            catch (ArgumentException ex)
+            {
+                TempData["Errors"] = ex.Message;
+                return RedirectToAction(nameof(Index), new { stockSymbol = orderRequest.StockSymbol, succeeded = false });
+            }
+            TempData["Succeeded"] = 1;
 
             return RedirectToAction(nameof(Orders));
         }
@@ -123,6 +164,7 @@ namespace StocksApp.UI.Controllers
             };
 
             ViewBag.TradingOptions = _tradingOptions;
+            ViewBag.Succeeded = TempData["Succeeded"];
 
             return View(orders);
         }

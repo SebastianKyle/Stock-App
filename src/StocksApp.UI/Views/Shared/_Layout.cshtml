@@ -22,49 +22,14 @@
 
     <div class="page-content">
 
-      <!-- Success dialog start -->
-      <div class="modal fade text-width:30%;" id="successTransactionModal" role="dialog">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-          <div class="modal-content">
+      <!-- Success dialog -->
+      @await Html.PartialAsync("~/Views/Shared/Partials/_SuccessTransactionModal.cshtml")
 
-            <div class="modal-header">
-              <h2>Information</h2>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
+      <!-- Failed dialog -->
+      @await Html.PartialAsync("~/Views/Shared/Partials/_FailedTransactionModal.cshtml")
 
-            <div class="modal-body alert alert-success" id="successTransactionModalBody">
-              Modal body
-            </div>
-
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            </div>
-
-          </div>
-        </div>
-      </div>
-
-      <!-- Failed dialog start -->
-      <div class="modal fade text-width:30%;" id="failedTransactionModal" role="dialog">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-          <div class="modal-content">
-
-            <div class="modal-header">
-              <h2>Information</h2>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-
-            <div class="modal-body alert alert-danger" id="failedTransactionModalBody">
-              Modal body
-            </div>
-
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            </div>
-
-          </div>
-        </div>
-      </div>
+      <!-- Reminder dialog -->
+      @await Html.PartialAsync("~/Views/Shared/Partials/_ReminderModal.cshtml")
 
       <div class="margin-bottom">
         <div class="flex" id="top-bar-div">
@@ -90,8 +55,8 @@
                     @User.Identity?.Name
                   </li>
                   <li>
-                    <a asp-controller="AccountBalance" asp-action="Deposit">Deposit</a>
-                    <a asp-controller="AccountBalance" asp-action="Withdraw">Withdraw</a>
+                    @* <a asp-controller="AccountBalance" asp-action="Deposit">Deposit</a>
+                    <a asp-controller="AccountBalance" asp-action="Withdraw">Withdraw</a> *@
                     <a asp-controller="Account" asp-action="Logout">Log out</a>
                   </li>
                 }
@@ -124,11 +89,11 @@
 
           @if (ViewBag.CurrentUrl == "~/Trade/Index")
           {
-            <li><a href="#" class="nav-active">Trade</a></li>
+            <li><a href="#" class="nav-active" id="tradeAction">Trade</a></li>
           }
           else
           {
-            <li><a href="#">Trade</a></li>
+            <li><a href="#" id="tradeAction">Trade</a></li>
           }
 
           @if (ViewBag.CurrentUrl == "~/Trade/Orders")
@@ -138,6 +103,24 @@
           else
           {
             <li><a asp-controller="Trade" asp-action="Orders">Orders</a></li>
+          }
+
+          @if (ViewBag.CurrentUrl == "~/AccountBalance/Deposit")
+          {
+            <li><a asp-controller="AccountBalance" asp-action="Deposit" class="nav-active">Deposit</a></li>
+          }
+          else
+          {
+            <li><a asp-controller="AccountBalance" asp-action="Deposit">Deposit</a></li>
+          }
+
+          @if (ViewBag.CurrentUrl == "~/AccountBalance/Withdraw")
+          {
+            <li><a asp-controller="AccountBalance" asp-action="Withdraw" class="nav-active">Withdraw</a></li>
+          }
+          else
+          {
+            <li><a asp-controller="AccountBalance" asp-action="Withdraw">Deposit</a></li>
           }
         </ul>
       </div>

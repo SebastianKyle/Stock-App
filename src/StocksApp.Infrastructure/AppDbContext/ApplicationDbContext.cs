@@ -19,6 +19,7 @@ namespace StocksApp.Infrastructure.AppDbContext
         public virtual DbSet<BuyOrder> BuyOrders { get; set; }
         public virtual DbSet<SellOrder> SellOrders { get; set; }
         public virtual DbSet<UserAccountBalance> UserAccountBalances { get; set; }
+        public virtual DbSet<UserStock> UserStocks { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -28,7 +29,7 @@ namespace StocksApp.Infrastructure.AppDbContext
             modelBuilder.Entity<BuyOrder>().ToTable("BuyOrders");
             modelBuilder.Entity<SellOrder>().ToTable("SellOrders");
             modelBuilder.Entity<UserAccountBalance>().ToTable("UserAccountBalances");
-
+            modelBuilder.Entity<UserStock>().ToTable("UserStocks");
         }
     }
 }

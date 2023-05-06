@@ -9,40 +9,64 @@ using StocksApp.Core.Domain.RepositoryContracts;
 using StocksApp.Core.DTO;
 using StocksApp.Core.Helpers;
 using StocksApp.Core.ServiceContracts.StocksServices;
+using StocksApp.Core.ServiceContracts.UserStockServices;
 
 namespace StocksApp.Core.Services.StocksServices
 {
     public class SellOrdersService : ISellOrdersService
     {
         private readonly IStocksRepository _stocksRepository;
+        private readonly IUserStockGetService _userStockGetService;
+        private readonly IAccountBalanceRepository _accountBalanceRepository;
         private readonly ILogger<SellOrdersService> _logger;
         private readonly IDiagnosticContext _diagnosticContext;
 
-        public SellOrdersService(IStocksRepository stocksRepository, ILogger<SellOrdersService> logger, IDiagnosticContext diagnosticContext) 
+        public SellOrdersService(IStocksRepository stocksRepository, IUserStockGetService userStockGetService, IAccountBalanceRepository accountBalanceRepository, ILogger<SellOrdersService> logger, IDiagnosticContext diagnosticContext) 
         {
             _stocksRepository = stocksRepository;
+            _userStockGetService = userStockGetService;
+            _accountBalanceRepository = accountBalanceRepository;
             _logger = logger;
             _diagnosticContext = diagnosticContext;
         }
 
         public async Task<SellOrderResponse> CreateSellOrder(SellOrderRequest? sellOrderRequest)
         {
-        _logger.LogInformation($"{nameof(CreateSellOrder)} method of {nameof(SellOrdersService)}");
+            _logger.LogInformation($"{nameof(CreateSellOrder)} method of {nameof(SellOrdersService)}");
 
-        if (sellOrderRequest == null) 
-        {
-            throw new ArgumentNullException(nameof(sellOrderRequest));
-        }
+            if (sellOrderRequest == null) 
+            {
+                throw new ArgumentNullException(nameof(sellOrderRequest));
+            }
 
-        // Model validation
-        ValidationHelper.ModelValidation(sellOrderRequest);
+            // Model validation
+            ValidationHelper.ModelValidation(sellOrderRequest);
 
-        SellOrder sellOrder = sellOrderRequest.ToSellOrder();
-        sellOrder.SellOrderID = Guid.NewGuid();
+            SellOrder sellOrder = sellOrderRequest.ToSellOrder();
+            sellOrder.SellOrderID = Guid.NewGuid();
 
-        SellOrder sellOrderFromRepo = await _stocksRepository.CreateSellOrder(sellOrder);
+            // Validate if user has enough shares to sell
+            // List<BuyOrder> buyOrders = await _stocksRepository.GetUserBuyOrders(sellOrderRequest.UserID);
+            // List<BuyOrder> matchingBuyOrders = buyOrders.Where(temp => temp.StockSymbol == sellOrderRequest.StockSymbol).ToList();
+            List<UserStockResponse> userStocks = await _userStockGetService.GetUserStocks(sellOrderRequest.UserID);
+            UserStockResponse? matchingStock = userStocks.FirstOrDefault(temp => temp.StockSymbol == sellOrderRequest.StockSymbol);
+            // long sharesAmount = matchingBuyOrders.Sum(temp => temp.Quantity);
+            long sharesAmount = matchingStock == null ? 0 : matchingStock.Quantity;
 
-        return sellOrder.ToSellOrderResponse();
+            if (sellOrderRequest.Quantity > sharesAmount)
+            {
+                throw new ArgumentException($"You don't have enough {sellOrderRequest.StockName} shares to sell.");
+            }
+
+            SellOrder sellOrderFromRepo = await _stocksRepository.CreateSellOrder(sellOrder);
+
+            // Increase account balance
+            double tradeAmount = sellOrderRequest.Quantity * sellOrderRequest.Price;
+            UserAccountBalance matchingUser = await _accountBalanceRepository.GetAccountBalance(sellOrderRequest.UserID); 
+            matchingUser.AccountBalance += tradeAmount;
+            await _accountBalanceRepository.UpdateAccountBalance(matchingUser);
+
+            return sellOrder.ToSellOrderResponse();
         }
 
         public async Task<List<SellOrderResponse>> GetSellOrders()

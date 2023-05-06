@@ -11,9 +11,11 @@ using StocksApp.Core.Domain.RepositoryContracts;
 using StocksApp.Core.ServiceContracts.AccountBalanceServices;
 using StocksApp.Core.ServiceContracts.FinnhubServices;
 using StocksApp.Core.ServiceContracts.StocksServices;
+using StocksApp.Core.ServiceContracts.UserStockServices;
 using StocksApp.Core.Services.AccountBalanceServices;
 using StocksApp.Core.Services.FinnhubServices;
 using StocksApp.Core.Services.StocksServices;
+using StocksApp.Core.Services.UserStockServices;
 using StocksApp.Infrastructure.AppDbContext;
 using StocksApp.Infrastructure.Repositories;
 using StocksApp.UI.Middlewares;
@@ -45,6 +47,10 @@ namespace StocksApp.UI.StartupExtensions
 
             services.AddTransient<IAccountBalanceDepositService, AccountBalanceDepositService>();
             services.AddTransient<IAccountBalanceWithdrawService, AccountBalanceWithdrawService>();
+
+            services.AddTransient<IUserStockRepository, UserStockRepository>();
+            services.AddTransient<IUserStockAddService, UserStockAddService>();
+            services.AddTransient<IUserStockGetService, UserStockGetService>();
 
             // Application Db context
             services.AddDbContext<ApplicationDbContext>(options => {

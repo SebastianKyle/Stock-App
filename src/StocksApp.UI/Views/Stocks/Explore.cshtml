@@ -73,3 +73,24 @@
   </div>
 
 </div>
+
+@section Scripts {
+  <script type="text/javascript">
+    function openReminderModal(msg) {
+      var myDiv = document.getElementById("reminderModalBody");
+      myDiv.innerHTML = msg;
+      $('#reminderModal').modal('show');
+    }
+
+    $(document).ready(function() {
+      document.getElementById("tradeAction").addEventListener("click", function(event) {
+        event.preventDefault();
+        var stock = "@ViewBag.Stock";
+        if (stock == "") {
+          var message = "Please choose a stock for trading. ";
+          openReminderModal(message);
+        }
+      });
+    });
+  </script>
+}

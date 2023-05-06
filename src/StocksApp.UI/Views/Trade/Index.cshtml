@@ -85,4 +85,24 @@
 
 @section Scripts {
   <script src="~/Scripts/FinnhubScript.js"></script>
+
+  <script type="text/javascript">
+
+    function openFailedModal(msg) {
+      var myDiv = document.getElementById("failedTransactionModalBody");
+      myDiv.innerHTML = msg;
+      $('#failedTransactionModal').modal('show');
+    }
+
+    $(document).ready(function() {
+      var transactionState = @TempData["Succeeded"];
+      var message = "";
+
+      if (transactionState == 0) {
+        message = "Transaction failed. " + "@ViewBag.ErrorMessage";
+        openFailedModal(message);
+      }
+    });
+
+  </script>
 }

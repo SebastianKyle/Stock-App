@@ -63,3 +63,24 @@
   </div>
 
 </div>
+
+@section Scripts {
+  <script type="text/javascript">
+    function openSuccessModal(msg) {
+      var myDiv = document.getElementById("successTransactionModalBody");
+      myDiv.innerHTML = msg;
+      $('#successTransactionModal').modal('show');
+    }
+
+    $(document).ready(function() {
+      var transactionState = "@ViewBag.Succeeded";
+      var message = "";
+
+      if (transactionState == "1") {
+        message = "Transaction successful";
+        openSuccessModal(message);
+      }
+    });
+
+  </script>
+}
