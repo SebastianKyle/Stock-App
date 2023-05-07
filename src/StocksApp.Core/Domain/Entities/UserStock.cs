@@ -10,12 +10,12 @@ using StocksApp.Core.DTO;
 namespace StocksApp.Core.Domain.Entities
 {
     /// <summary>
-    /// Represents a stock of user after placing buy order
+    /// Represents a stock of user
     /// </summary>
     public class UserStock
     {
         /// <summary>
-        /// Unique id of user that place the order
+        /// Unique id of user
         /// </summary>
         [Key]
         [ForeignKey(nameof(ApplicationUser.Id))]
@@ -36,6 +36,11 @@ namespace StocksApp.Core.Domain.Entities
         /// The amount of shares placed
         /// </summary>
         public uint Quantity { get; set; }
+
+        /// <summary>
+        /// The total price of shares
+        /// </summary>
+        public double TotalPrice { get; set; }
     }
 
     /// <summary>
@@ -54,7 +59,8 @@ namespace StocksApp.Core.Domain.Entities
                 UserID = userStockRequest.UserID,
                 StockSymbol = userStockRequest.StockSymbol,
                 StockName = userStockRequest.StockName,
-                Quantity = userStockRequest.Quantity
+                Quantity = userStockRequest.Quantity,
+                TotalPrice = userStockRequest.Quantity * userStockRequest.Price
             };
 
             return newUserStock;
