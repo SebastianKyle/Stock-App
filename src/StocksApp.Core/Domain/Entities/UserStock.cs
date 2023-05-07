@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using StocksApp.Core.Domain.IdentityEntities;
 using StocksApp.Core.DTO;
 
@@ -17,7 +18,6 @@ namespace StocksApp.Core.Domain.Entities
         /// <summary>
         /// Unique id of user
         /// </summary>
-        [Key]
         [ForeignKey(nameof(ApplicationUser.Id))]
         public Guid UserID { get; set; }
 
