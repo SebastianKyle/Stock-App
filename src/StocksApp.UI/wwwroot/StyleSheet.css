@@ -111,6 +111,43 @@ body {
   background-color: #83b8cb;
 }
 
+td img {
+  width: 50px;
+  height: 50px;
+  margin-right: .8rem;
+  border-radius: 10%;
+
+  vertical-align: middle; 
+}
+
+main.table {
+  width: 60vw;
+  height: 90vh;
+  background-color: #efefef;
+  box-shadow: 0 .4rem .8rem #000500;
+  border-radius: .8rem;
+
+  overflow: hidden;
+}
+
+.table__header{
+  width: 60%;
+  height: 10%;
+  background-color: #efefef;
+  padding: .8rem 1rem;
+}
+
+.table__body {
+  width: 95%;
+  max-height: calc(89% - .8rem);
+  background-color: #efefef;
+
+  margin: .8rem auto;
+  border-radius: .6rem;
+
+  overflow: auto;
+}
+
 .w-25 {
   width: 25%;
 }

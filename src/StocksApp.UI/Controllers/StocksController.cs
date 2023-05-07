@@ -2,12 +2,15 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using StocksApp.Core.DTO;
 using StocksApp.Core.ServiceContracts.FinnhubServices;
+using StocksApp.Core.ServiceContracts.UserStockServices;
 using StocksApp.UI.Models;
 
 namespace StocksApp.UI.Controllers
@@ -18,6 +21,8 @@ namespace StocksApp.UI.Controllers
     {
         private readonly TradingOptions _tradingOptions;
         private readonly IFinnhubStocksService _finnhubStocksService;
+        private readonly IFinnhubCompanyProfileService _finnhubCompanyProfileService;
+        private readonly IUserStockGetService _userStockGetService;
         private readonly ILogger<StocksController> _logger;
 
         /// <summary>
@@ -26,10 +31,12 @@ namespace StocksApp.UI.Controllers
         /// <param name="tradingOptions">Inject TradingOptions config through Options pattern</param>
         /// <param name="finnhubService">Inject FinnhubService</param>
         /// <param name="logger">Inject ILogger object for logging</param>
-        public StocksController(IOptions<TradingOptions> tradingOptions, IFinnhubStocksService finnhubStocksService, ILogger<StocksController> logger)
+        public StocksController(IOptions<TradingOptions> tradingOptions, IFinnhubStocksService finnhubStocksService, IFinnhubCompanyProfileService finnhubCompanyProfileService, IUserStockGetService userStockGetService, ILogger<StocksController> logger)
         {
             _tradingOptions = tradingOptions.Value;
             _finnhubStocksService = finnhubStocksService;
+            _finnhubCompanyProfileService = finnhubCompanyProfileService;
+            _userStockGetService = userStockGetService;
             _logger = logger;
         }
 
@@ -67,6 +74,24 @@ namespace StocksApp.UI.Controllers
             ViewBag.Stock = stock;
 
             return View(stocks);
+        }
+
+        [Route("[action]")]
+        public async Task<IActionResult> MyStocks()
+        {
+            Guid userID = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+            List<UserStockResponse> userStocks = await _userStockGetService.GetUserStocks(userID);
+
+            Dictionary<string, object?> companiesLogo = new Dictionary<string, object?>();
+            foreach (UserStockResponse stock in userStocks)
+            {
+                Dictionary<string, object>? companyDetails = await _finnhubCompanyProfileService.GetCompanyProfile(stock.StockSymbol);
+                companiesLogo.Add(stock.StockSymbol, companyDetails["logo"]);
+            }
+            ViewBag.CompaniesLogo = companiesLogo;
+
+            return View(userStocks);
         }
     }
 }

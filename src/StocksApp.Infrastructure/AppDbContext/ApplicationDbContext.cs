@@ -29,6 +29,7 @@ namespace StocksApp.Infrastructure.AppDbContext
             modelBuilder.Entity<BuyOrder>().ToTable("BuyOrders");
             modelBuilder.Entity<SellOrder>().ToTable("SellOrders");
             modelBuilder.Entity<UserAccountBalance>().ToTable("UserAccountBalances");
+            modelBuilder.Entity<UserStock>().HasKey(m => new { m.UserID, m.StockSymbol, m.StockName });
             modelBuilder.Entity<UserStock>().ToTable("UserStocks");
         }
     }

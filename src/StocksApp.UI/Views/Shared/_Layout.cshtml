@@ -105,6 +105,15 @@
             <li><a asp-controller="Trade" asp-action="Orders">Orders</a></li>
           }
 
+          @if (ViewBag.CurrentUrl == "~/Stocks/MyStocks")
+          {
+            <li><a asp-controller="Stocks" asp-action="MyStocks" class="nav-active">My Stocks</a></li>
+          }
+          else
+          {
+            <li><a asp-controller="Stocks" asp-action="MyStocks">My Stocks</a></li>
+          }
+
           @if (ViewBag.CurrentUrl == "~/AccountBalance/Deposit")
           {
             <li><a asp-controller="AccountBalance" asp-action="Deposit" class="nav-active">Deposit</a></li>
@@ -120,7 +129,7 @@
           }
           else
           {
-            <li><a asp-controller="AccountBalance" asp-action="Withdraw">Deposit</a></li>
+            <li><a asp-controller="AccountBalance" asp-action="Withdraw">Withdraw</a></li>
           }
         </ul>
       </div>
