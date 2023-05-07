@@ -1,0 +1,9 @@
+@model UserAccountBalanceResponse
+
+<button type="button" id="account-balance-popover" class="btn btn-light" data-bs-toggle="popover"
+    data-bs-placement="bottom" data-bs-custom-class="account-balance-popover"
+    data-bs-title="Account balance" 
+    data-bs-content="@(Math.Round(Model.AccountBalance, 2))$"
+>
+  <i class="fas fa-coins"></i>
+</button>

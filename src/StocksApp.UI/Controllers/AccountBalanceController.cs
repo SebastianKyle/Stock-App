@@ -99,5 +99,14 @@ namespace StocksApp.UI.Controllers
 
             return View(balanceWithdrawDTO);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> Balance()
+        {
+            Guid userID = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            UserAccountBalanceResponse? accountBalance = await _getService.GetAccountBalance(userID);
+
+            return Json(new { accountBalance.AccountBalance });
+        }
     }
 }
