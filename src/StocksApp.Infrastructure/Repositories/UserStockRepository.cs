@@ -30,6 +30,7 @@ namespace StocksApp.Infrastructure.Repositories
         else
         {
             matchingStock.Quantity += userStock.Quantity; 
+            matchingStock.TotalPrice += userStock.TotalPrice;
             await _db.SaveChangesAsync();
         }
 

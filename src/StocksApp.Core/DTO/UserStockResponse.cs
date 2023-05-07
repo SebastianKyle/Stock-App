@@ -31,6 +31,11 @@ namespace StocksApp.Core.DTO
         /// </summary>
         public uint Quantity { get; set; }
 
+        /// <summary>
+        /// The total price of shares placed
+        /// </summary>
+        public double TotalPrice { get; set; }
+
         // override object.Equals
         public override bool Equals(object obj)
         {
@@ -41,7 +46,7 @@ namespace StocksApp.Core.DTO
             
             UserStockResponse userStockResponse = (UserStockResponse)obj;
 
-            return (this.UserID == userStockResponse.UserID && this.StockSymbol == userStockResponse.StockSymbol && this.StockName == userStockResponse.StockName && this.Quantity == userStockResponse.Quantity);
+            return (this.UserID == userStockResponse.UserID && this.StockSymbol == userStockResponse.StockSymbol && this.StockName == userStockResponse.StockName && this.Quantity == userStockResponse.Quantity && this.TotalPrice == userStockResponse.TotalPrice);
         }
         
         // override object.GetHashCode
@@ -67,7 +72,8 @@ namespace StocksApp.Core.DTO
                 UserID = userStock.UserID,
                 StockSymbol = userStock.StockSymbol,
                 StockName = userStock.StockName,
-                Quantity = userStock.Quantity
+                Quantity = userStock.Quantity,
+                TotalPrice = userStock.TotalPrice
             };
 
             return newUserStockResponse;
