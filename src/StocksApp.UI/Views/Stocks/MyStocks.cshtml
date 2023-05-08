@@ -16,6 +16,8 @@
   <div class="flex-1 text-right"></div>
 </div>
 
+<form action="" method="get">
+
   <main class="table">
 
     <section class="table__header">
@@ -35,7 +37,8 @@
               <th> Stock symbol </th>
               <th> Stock name </th>
               <th> Quantity </th>
-              <th> Total price </th>
+              <th> Current price </th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
@@ -43,10 +46,14 @@
             {
               <tr>
                 <td style="width: 12%;" align="center"> <img src="@ViewBag.CompaniesLogo[userStock.StockSymbol]" width="50px" alt="~/defaultStock.svg"> </td>
-                <td style="width: 14%;"> @userStock.StockSymbol </td>
-                <td style="width: 18%;"> @userStock.StockName </td>
+                <td style="width: 12%;" class="stockSymbol">@userStock.StockSymbol</td>
+                <td style="width: 16%;"> @userStock.StockName </td>
                 <td style="width: 13%;"> @userStock.Quantity </td>
-                <td style="width: 20%;"> @(Math.Round(userStock.TotalPrice, 2)) <small>$</small> </td>
+                <td style="width: 15%; font-weight: bold;"> <small>$</small><span id="@userStock.StockSymbol">0</span> </td>
+                @* <form asp-controller="Trade" asp-action="Index" asp-route-stockSymbol="@userStock.StockSymbol" method="get">
+                  <td style="width: 10%;"><button type="submit" class="btn btn-danger"> Trade </button></td>
+                </form> *@
+                <td style="width: 10%;"><a style="color: #f7f6f6" class="btn btn-primary" href="~/Trade/Index/@userStock.StockSymbol"> Trade </a></td>
               </tr>
             }
           </tbody>
@@ -54,4 +61,13 @@
       </section>
     }
 
+    <input type="hidden" id="FinnhubToken" value="@ViewBag.FinnhubToken">
+
   </main>
+
+</form>
+
+
+@section Scripts {
+  <script src="~/Scripts/FinnhubStocksListScript.js"></script>
+}

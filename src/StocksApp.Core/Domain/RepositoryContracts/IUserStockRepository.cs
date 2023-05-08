@@ -18,6 +18,12 @@ namespace StocksApp.Core.Domain.RepositoryContracts
         Task<UserStock> AddUserStock(UserStock userStock);
 
         /// <summary>
+        /// Remove or decrease stock shares after placing sell order
+        /// </summary>
+        /// <param name="userStock">UserStock to decrease</param>
+        Task<UserStock> DecreaseUserStock(UserStock userStock);
+
+        /// <summary>
         /// Get the stocks of the current user
         /// </summary>
         /// <param name="userID">userID to search</param>

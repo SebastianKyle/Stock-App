@@ -50,6 +50,7 @@ namespace StocksApp.UI.StartupExtensions
 
             services.AddTransient<IUserStockRepository, UserStockRepository>();
             services.AddTransient<IUserStockAddService, UserStockAddService>();
+            services.AddTransient<IUserStockDecreaseService, UserStockDecreaseService>();
             services.AddTransient<IUserStockGetService, UserStockGetService>();
 
             // Application Db context

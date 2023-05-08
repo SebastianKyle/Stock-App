@@ -27,6 +27,7 @@ namespace StocksApp.UI.Controllers
         private readonly IBuyOrdersService _buyOrdersService;
         private readonly ISellOrdersService _sellOrdersService;
         private readonly IUserStockAddService _userStockAddService;
+        private readonly IUserStockDecreaseService _userStockDecreaseService;
         private readonly ILogger<TradeController> _logger;
 
         /// <summary>
@@ -37,7 +38,7 @@ namespace StocksApp.UI.Controllers
         /// <param name="configuration">Inject IConfiguration</param>
         /// <param name="stocksService">Inject StocksService</param>
         /// <param name="logger">Inject ILogger object for logging</param>
-        public TradeController(IFinnhubCompanyProfileService finnhubCompanyProfileService, IFinnhubStockPriceQuoteService finnhubStockPriceQuoteService, IOptions<TradingOptions> tradingOptions, IConfiguration configuration, IBuyOrdersService buyOrdersService, ISellOrdersService sellOrdersService, IUserStockAddService userStockAddService, ILogger<TradeController> logger) 
+        public TradeController(IFinnhubCompanyProfileService finnhubCompanyProfileService, IFinnhubStockPriceQuoteService finnhubStockPriceQuoteService, IOptions<TradingOptions> tradingOptions, IConfiguration configuration, IBuyOrdersService buyOrdersService, ISellOrdersService sellOrdersService, IUserStockAddService userStockAddService, IUserStockDecreaseService userStockDecreaseService, ILogger<TradeController> logger) 
         {
             _finnhubCompanyProfileService = finnhubCompanyProfileService;
             _finnhubStocksPriceQuoteService = finnhubStockPriceQuoteService;
@@ -46,6 +47,7 @@ namespace StocksApp.UI.Controllers
             _buyOrdersService = buyOrdersService;
             _sellOrdersService = sellOrdersService;
             _userStockAddService = userStockAddService;
+            _userStockDecreaseService = userStockDecreaseService;
             _logger = logger;
         }
 
@@ -109,8 +111,7 @@ namespace StocksApp.UI.Controllers
                 UserID = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)),
                 StockSymbol = orderRequest.StockSymbol,
                 StockName = orderRequest.StockName,
-                Quantity = orderRequest.Quantity,
-                Price = orderRequest.Price
+                Quantity = orderRequest.Quantity
             };
             await _userStockAddService.AddUserStock(userStockRequest);
 
@@ -141,6 +142,15 @@ namespace StocksApp.UI.Controllers
                 TempData["Errors"] = ex.Message;
                 return RedirectToAction(nameof(Index), new { stockSymbol = orderRequest.StockSymbol, succeeded = false });
             }
+            
+            UserStockRequest userStockRequest = new UserStockRequest() {
+                UserID = userID,
+                StockSymbol = orderRequest.StockSymbol,
+                StockName = orderRequest.StockName,
+                Quantity = orderRequest.Quantity
+            };
+            await _userStockDecreaseService.DecreaseUserStock(userStockRequest);
+
             TempData["Succeeded"] = 1;
 
             return RedirectToAction(nameof(Orders));

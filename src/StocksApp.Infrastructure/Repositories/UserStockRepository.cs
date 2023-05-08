@@ -30,9 +30,26 @@ namespace StocksApp.Infrastructure.Repositories
         else
         {
             matchingStock.Quantity += userStock.Quantity; 
-            matchingStock.TotalPrice += userStock.TotalPrice;
             await _db.SaveChangesAsync();
         }
+
+        return userStock;
+    }
+
+    public async Task<UserStock> DecreaseUserStock(UserStock userStock)
+    {
+        UserStock? matchingStock = _db.UserStocks.FirstOrDefault(temp => temp.UserID == userStock.UserID && temp.StockSymbol == userStock.StockSymbol);
+
+        if (matchingStock.Quantity < userStock.Quantity)
+        {
+            throw new ArgumentException("Amount of owned shares is not enough to sell");
+        }
+        matchingStock.Quantity -= userStock.Quantity;
+        if (matchingStock.Quantity == 0) 
+        {
+            _db.UserStocks.Remove(matchingStock);
+        }
+        await _db.SaveChangesAsync();
 
         return userStock;
     }

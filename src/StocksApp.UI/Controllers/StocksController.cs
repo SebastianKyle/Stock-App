@@ -16,10 +16,10 @@ using StocksApp.UI.Models;
 namespace StocksApp.UI.Controllers
 {
     [Route("[controller]")]
-    [AllowAnonymous]
     public class StocksController : Controller
     {
         private readonly TradingOptions _tradingOptions;
+        private readonly IConfiguration _configuration;
         private readonly IFinnhubStocksService _finnhubStocksService;
         private readonly IFinnhubCompanyProfileService _finnhubCompanyProfileService;
         private readonly IUserStockGetService _userStockGetService;
@@ -31,9 +31,10 @@ namespace StocksApp.UI.Controllers
         /// <param name="tradingOptions">Inject TradingOptions config through Options pattern</param>
         /// <param name="finnhubService">Inject FinnhubService</param>
         /// <param name="logger">Inject ILogger object for logging</param>
-        public StocksController(IOptions<TradingOptions> tradingOptions, IFinnhubStocksService finnhubStocksService, IFinnhubCompanyProfileService finnhubCompanyProfileService, IUserStockGetService userStockGetService, ILogger<StocksController> logger)
+        public StocksController(IOptions<TradingOptions> tradingOptions, IConfiguration configuration, IFinnhubStocksService finnhubStocksService, IFinnhubCompanyProfileService finnhubCompanyProfileService, IUserStockGetService userStockGetService, ILogger<StocksController> logger)
         {
             _tradingOptions = tradingOptions.Value;
+            _configuration = configuration;
             _finnhubStocksService = finnhubStocksService;
             _finnhubCompanyProfileService = finnhubCompanyProfileService;
             _userStockGetService = userStockGetService;
@@ -43,6 +44,7 @@ namespace StocksApp.UI.Controllers
         [Route("/")]
         [Route("[action]/{stock?}")]
         [Route("~/[action]/{stock?}")]
+        [AllowAnonymous]
         public async Task<IActionResult> Explore(string? stock, bool showAll = false)
         {
             _logger.LogInformation($"{nameof(Explore)} IAction method of {nameof(StocksController)}");
@@ -90,6 +92,7 @@ namespace StocksApp.UI.Controllers
                 companiesLogo.Add(stock.StockSymbol, companyDetails["logo"]);
             }
             ViewBag.CompaniesLogo = companiesLogo;
+            ViewBag.FinnhubToken = _configuration["FinnhubToken"];
 
             return View(userStocks);
         }
