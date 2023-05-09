@@ -152,6 +152,10 @@ main.table {
   width: 25%;
 }
 
+.w-30 {
+  width: 30%;
+}
+
 .w-40 {
   width: 40%;
 }
@@ -601,6 +605,14 @@ a.button-link:visited {
   border-radius: 15px;
   margin: auto;
   width: 50%;
+  padding: 20px;
+}
+
+.form-container-w-60 {
+  background-color: #ffffff;
+  border-radius: 15px;
+  margin: auto;
+  width: 60%;
   padding: 20px;
 }
 

@@ -18,7 +18,7 @@
 
     @* Current account balance *@
     <div class="form-field flex">
-      <h4>Current account balance: @ViewBag.AccountBalance <small class="text-grey"> $</small></h4>
+      <h4>Current account balance: @(Math.Round(ViewBag.AccountBalance, 2)) <small class="text-grey"> $</small></h4>
     </div>
 
     @* Deposit amount *@

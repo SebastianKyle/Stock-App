@@ -11,20 +11,20 @@
   <span>Withdraw</span>
 </div>
 
-<div class="form-container">
+<div class="form-container-w-60">
   <h2 class="text-large">Withdraw</h2>
 
   <form asp-action="Withdraw" asp-controller="AccountBalance" method="post">
 
     @* Current account balance *@
     <div class="form-field flex">
-      <h4>Current account balance: @ViewBag.AccountBalance <small class="text-grey"> $</small></h4>
+      <h4>Current account balance: @(Math.Round(ViewBag.AccountBalance, 2)) <small class="text-grey"> $</small></h4>
     </div>
 
     @* Withdraw amount *@
     <div class="form-field flex">
       <div class="w-25">
-        <label asp-for="WithdrawAmount" class="form-label pt ml">Withdraw amount</label>
+        <label asp-for="WithdrawAmount" class="form-label pt">Withdraw amount</label>
       </div>
 
       <div class="flex-1">
