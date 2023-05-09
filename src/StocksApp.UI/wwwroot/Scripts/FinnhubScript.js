@@ -40,6 +40,7 @@ socket.addEventListener('message', function (event) {
 
       //update the UI
       $(".price").text(updatedPrice.toFixed(2)); //price - big display
+      $("#Price").val(updatedPrice); // Update hidden price input for model binding
     }
   }
 });
