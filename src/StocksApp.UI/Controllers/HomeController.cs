@@ -11,7 +11,7 @@ using StocksApp.UI.Models;
 
 namespace StocksApp.UI.Controllers
 {
-    [Route("[controller]")]
+    [AllowAnonymous]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -21,8 +21,7 @@ namespace StocksApp.UI.Controllers
             _logger = logger;
         }
 
-        [Route("[action]")]
-        [AllowAnonymous]
+        [Route("Error")]
         public IActionResult Error()
         {
             IExceptionHandlerPathFeature? exceptionHandlerPathFeature = HttpContext.Features.Get<IExceptionHandlerPathFeature>();
