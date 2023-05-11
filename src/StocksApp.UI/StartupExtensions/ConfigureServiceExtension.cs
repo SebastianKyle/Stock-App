@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting.Internal;
 using StocksApp.Core.Domain.IdentityEntities;
 using StocksApp.Core.Domain.RepositoryContracts;
 using StocksApp.Core.ServiceContracts.AccountBalanceServices;
@@ -24,7 +25,7 @@ namespace StocksApp.UI.StartupExtensions
 {
     public static class ConfigureServiceExtension
     {
-        public static IServiceCollection ConfigureServices(this IServiceCollection services, IConfiguration configuration) 
+        public static IServiceCollection ConfigureServices(this IServiceCollection services, IConfiguration configuration, IWebHostEnvironment environment) 
         {
             services.AddControllersWithViews();
             services.Configure<TradingOptions>(configuration.GetSection("TradingOptions"));
@@ -55,7 +56,14 @@ namespace StocksApp.UI.StartupExtensions
 
             // Application Db context
             services.AddDbContext<ApplicationDbContext>(options => {
-                options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
+                if (environment.IsProduction())
+                {
+                    options.UseSqlServer(configuration.GetConnectionString("AzureDbConnection"));
+                } 
+                else 
+                {
+                    options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
+                }
             });
 
             // Add identity service

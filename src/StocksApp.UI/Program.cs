@@ -15,7 +15,7 @@ if (!builder.Environment.IsDevelopment())
   builder.Configuration.AddUserSecrets<Program>();
 }
 
-builder.Services.ConfigureServices(builder.Configuration);
+builder.Services.ConfigureServices(builder.Configuration, builder.Environment);
 
 var app = builder.Build();
 
