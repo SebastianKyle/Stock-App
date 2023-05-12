@@ -62,6 +62,10 @@ namespace StocksApp.UI.Controllers
                     {
                         stocksDictionary = stocksDictionary.Where(temp => Top25PopularStocksList.Contains(Convert.ToString(temp["symbol"]))).ToList();
                     }
+                    ViewBag.showAll = false;
+                }
+                else {
+                    ViewBag.showAll = true;
                 }
 
                 // Convert dictionary objects to stock objects

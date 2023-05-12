@@ -29,5 +29,10 @@ namespace StocksApp.Core.DTO
         /// The amount of shares placed
         /// </summary>
         public uint Quantity { get; set; }
+
+        /// <summary>
+        /// Stock price of last placed order
+        /// </summary>
+        public double LastPrice { get; set; }
     }
 }

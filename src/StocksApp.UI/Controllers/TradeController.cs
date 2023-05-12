@@ -111,7 +111,8 @@ namespace StocksApp.UI.Controllers
                 UserID = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)),
                 StockSymbol = orderRequest.StockSymbol,
                 StockName = orderRequest.StockName,
-                Quantity = orderRequest.Quantity
+                Quantity = orderRequest.Quantity,
+                LastPrice = orderRequest.Price
             };
             await _userStockAddService.AddUserStock(userStockRequest);
 
@@ -147,7 +148,8 @@ namespace StocksApp.UI.Controllers
                 UserID = userID,
                 StockSymbol = orderRequest.StockSymbol,
                 StockName = orderRequest.StockName,
-                Quantity = orderRequest.Quantity
+                Quantity = orderRequest.Quantity,
+                LastPrice = orderRequest.Price
             };
             await _userStockDecreaseService.DecreaseUserStock(userStockRequest);
 

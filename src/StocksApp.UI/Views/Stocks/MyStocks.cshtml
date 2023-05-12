@@ -49,7 +49,7 @@
                 <td style="width: 12%;" class="stockSymbol">@userStock.StockSymbol</td>
                 <td style="width: 16%;"> @userStock.StockName </td>
                 <td style="width: 13%;"> @userStock.Quantity </td>
-                <td style="width: 15%; font-weight: bold;"> <small>$</small><span id="@userStock.StockSymbol">-</span> </td>
+                <td style="width: 15%; font-weight: bold;"> <small>$</small><span id="@userStock.StockSymbol">@userStock.LastPrice</span> </td>
                 @* <form asp-controller="Trade" asp-action="Index" asp-route-stockSymbol="@userStock.StockSymbol" method="get">
                   <td style="width: 10%;"><button type="submit" class="btn btn-danger"> Trade </button></td>
                 </form> *@

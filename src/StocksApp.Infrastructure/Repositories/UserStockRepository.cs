@@ -30,6 +30,7 @@ namespace StocksApp.Infrastructure.Repositories
         else
         {
             matchingStock.Quantity += userStock.Quantity; 
+            matchingStock.LastPrice = userStock.LastPrice;
             await _db.SaveChangesAsync();
         }
 
@@ -45,6 +46,7 @@ namespace StocksApp.Infrastructure.Repositories
             throw new ArgumentException("Amount of owned shares is not enough to sell");
         }
         matchingStock.Quantity -= userStock.Quantity;
+        matchingStock.LastPrice = userStock.LastPrice;
         if (matchingStock.Quantity == 0) 
         {
             _db.UserStocks.Remove(matchingStock);

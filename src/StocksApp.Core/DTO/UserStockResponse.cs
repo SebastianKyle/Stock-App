@@ -31,6 +31,11 @@ namespace StocksApp.Core.DTO
         /// </summary>
         public uint Quantity { get; set; }
 
+        /// <summary>
+        /// Stock price of last placed order
+        /// </summary>
+        public double LastPrice { get; set; }
+
         // override object.Equals
         public override bool Equals(object obj)
         {
@@ -67,7 +72,8 @@ namespace StocksApp.Core.DTO
                 UserID = userStock.UserID,
                 StockSymbol = userStock.StockSymbol,
                 StockName = userStock.StockName,
-                Quantity = userStock.Quantity
+                Quantity = userStock.Quantity,
+                LastPrice = userStock.LastPrice
             };
 
             return newUserStockResponse;

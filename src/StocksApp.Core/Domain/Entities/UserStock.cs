@@ -36,6 +36,11 @@ namespace StocksApp.Core.Domain.Entities
         /// The amount of shares placed
         /// </summary>
         public uint Quantity { get; set; }
+
+        /// <summary>
+        /// Stock price of last placed order
+        /// </summary>
+        public double LastPrice { get; set; }
     }
 
     /// <summary>
@@ -54,7 +59,8 @@ namespace StocksApp.Core.Domain.Entities
                 UserID = userStockRequest.UserID,
                 StockSymbol = userStockRequest.StockSymbol,
                 StockName = userStockRequest.StockName,
-                Quantity = userStockRequest.Quantity
+                Quantity = userStockRequest.Quantity,
+                LastPrice = userStockRequest.LastPrice
             };
 
             return newUserStock;
