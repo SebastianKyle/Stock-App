@@ -58,7 +58,9 @@ namespace StocksApp.UI.StartupExtensions
             services.AddDbContext<ApplicationDbContext>(options => {
                 if (environment.IsProduction())
                 {
-                    options.UseSqlServer(configuration.GetConnectionString("AzureDbConnection"));
+                    options.UseSqlServer(configuration.GetConnectionString("AzureDbConnection"), sqlServerOptions => {
+                        sqlServerOptions.EnableRetryOnFailure();
+                    });
                 } 
                 else 
                 {
