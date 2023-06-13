@@ -32,27 +32,27 @@ namespace StocksApp.UI.StartupExtensions
             services.AddHttpClient();
 
             // Add services
-            services.AddTransient<IFinnhubCompanyProfileService, FinnhubCompanyProfileService>();
-            services.AddTransient<IFinnhubStockPriceQuoteService, FinnhubStockPriceQuoteService>();
-            services.AddTransient<IFinnhubStocksService, FinnhubStocksService>();
-            services.AddTransient<IFinnhubSearchStocksService, FinnhubSearchStocksService>();
-            services.AddTransient<IFinnhubRepository, FinnhubRepository>();
+            services.AddScoped<IFinnhubCompanyProfileService, FinnhubCompanyProfileService>();
+            services.AddScoped<IFinnhubStockPriceQuoteService, FinnhubStockPriceQuoteService>();
+            services.AddScoped<IFinnhubStocksService, FinnhubStocksService>();
+            services.AddScoped<IFinnhubSearchStocksService, FinnhubSearchStocksService>();
+            services.AddScoped<IFinnhubRepository, FinnhubRepository>();
 
-            services.AddTransient<IBuyOrdersService, BuyOrdersService>();
-            services.AddTransient<ISellOrdersService, SellOrdersService>();
-            services.AddTransient<IStocksRepository, StocksRepository>();
+            services.AddScoped<IBuyOrdersService, BuyOrdersService>();
+            services.AddScoped<ISellOrdersService, SellOrdersService>();
+            services.AddScoped<IStocksRepository, StocksRepository>();
 
-            services.AddTransient<IAccountBalanceRepository, AccountBalanceRepository>();
-            services.AddTransient<IAccountBalanceCreateService, AccountBalanceCreateService>();
-            services.AddTransient<IAccountBalanceGetService, AccountBalanceGetService>();
+            services.AddScoped<IAccountBalanceRepository, AccountBalanceRepository>();
+            services.AddScoped<IAccountBalanceCreateService, AccountBalanceCreateService>();
+            services.AddScoped<IAccountBalanceGetService, AccountBalanceGetService>();
 
-            services.AddTransient<IAccountBalanceDepositService, AccountBalanceDepositService>();
-            services.AddTransient<IAccountBalanceWithdrawService, AccountBalanceWithdrawService>();
+            services.AddScoped<IAccountBalanceDepositService, AccountBalanceDepositService>();
+            services.AddScoped<IAccountBalanceWithdrawService, AccountBalanceWithdrawService>();
 
-            services.AddTransient<IUserStockRepository, UserStockRepository>();
-            services.AddTransient<IUserStockAddService, UserStockAddService>();
-            services.AddTransient<IUserStockDecreaseService, UserStockDecreaseService>();
-            services.AddTransient<IUserStockGetService, UserStockGetService>();
+            services.AddScoped<IUserStockRepository, UserStockRepository>();
+            services.AddScoped<IUserStockAddService, UserStockAddService>();
+            services.AddScoped<IUserStockDecreaseService, UserStockDecreaseService>();
+            services.AddScoped<IUserStockGetService, UserStockGetService>();
 
             // Application Db context
             services.AddDbContext<ApplicationDbContext>(options => {
@@ -93,7 +93,7 @@ namespace StocksApp.UI.StartupExtensions
                                       | Microsoft.AspNetCore.HttpLogging.HttpLoggingFields.RequestPropertiesAndHeaders;
             });
 
-            services.AddTransient<ExceptionHandlingMiddleware>();
+            services.AddScoped<ExceptionHandlingMiddleware>();
 
             return services;
         }
