@@ -87,7 +87,6 @@ namespace StocksApp.UI.Controllers
         [Route("[action]")]
         [HttpPost]
         [TypeFilter(typeof(CreateOrderActionFilter))]
-        // [TypeFilter(typeof(HandleExceptionFilter))] // with TypeFilter, we can inject ILogger
         public async Task<IActionResult> BuyOrder(BuyOrderRequest orderRequest)
         {
             _logger.LogInformation($"{nameof(BuyOrder)} IAction method of {nameof(TradeController)} controller");
@@ -163,9 +162,6 @@ namespace StocksApp.UI.Controllers
         {
             _logger.LogInformation($"{nameof(Orders)} IAction method of {nameof(TradeController)} controller");
 
-            // List<BuyOrderResponse> buyOrders = await _buyOrdersService.GetBuyOrders();
-            // List<SellOrderResponse> sellOrders = await _sellOrdersService.GetSellOrders();
-
             Guid userID = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
 
             List<BuyOrderResponse> userBuyOrders = await _buyOrdersService.GetUserBuyOrders(userID);
@@ -185,11 +181,6 @@ namespace StocksApp.UI.Controllers
         [Route("[action]")]
         public async Task<IActionResult> OrdersPDF()
         {
-            // List<IOrderResponse> orders = new List<IOrderResponse>();
-            // orders.AddRange(await _buyOrdersService.GetBuyOrders());
-            // orders.AddRange(await _sellOrdersService.GetSellOrders());
-            // orders.OrderByDescending(temp => temp.DateAndTimeOfOrder).ToList();
-
             Guid userID = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
 
             List<IOrderResponse> orders = new List<IOrderResponse>();
